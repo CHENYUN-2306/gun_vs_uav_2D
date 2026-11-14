@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<title>强化学习二维机枪拦截 · 训练结果报告</title>
+<style>
+  :root { --bg:#ffffff; --panel:#f6f8fc; --line:#dde3ed; --text:#1f2937;
+           --muted:#6b7280; --blue:#2563eb; --green:#059669; --red:#dc2626; }
+  * { box-sizing:border-box; }
+  body { margin:0; padding:28px 32px 48px; background:var(--bg); color:var(--text);
+         font-family:"Microsoft YaHei","Noto Sans SC","Segoe UI",sans-serif; }
+  h1 { font-size:22px; margin:0 0 6px; }
+  h2 { font-size:15px; margin:26px 0 12px; padding-left:10px;
+        border-left:4px solid var(--blue); }
+  .sub { color:var(--muted); font-size:12.5px; margin-bottom:20px; }
+  .cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:12px; }
+  .card { background:var(--panel); border:1px solid var(--line); border-radius:10px;
+           padding:14px 16px; }
+  .label { font-size:11.5px; color:var(--muted); }
+  .value { font-size:24px; font-weight:700; margin:6px 0 3px; color:var(--blue); }
+  .note { font-size:11px; color:var(--muted); }
+  .grid { display:grid; grid-template-columns:1.25fr 1fr; gap:18px; align-items:start; }
+  @media (max-width:980px) { .grid { grid-template-columns:1fr; } }
+  .box { background:var(--panel); border:1px solid var(--line);
+          border-radius:10px; padding:14px; }
+  img { width:100%; display:block; border-radius:6px; background:#fff; }
+  table { width:100%; border-collapse:collapse; font-size:12.5px; }
+  td { padding:7px 9px; border-bottom:1px solid var(--line); vertical-align:top; }
+  td:first-child { color:var(--muted); width:34%; }
+  .ok { color:var(--green); font-weight:600; }
+</style></head><body>
+<h1>基于 Double DQN 的二维平面机枪自主拦截 · 结果报告</h1>
+<div class="sub">纯 NumPy 实现 · 仅依赖 numpy / matplotlib / pillow · 训练与可视化解耦 ·
+生成时间随 main.py 运行更新</div>
+<div class="cards"><div class="card"><div class="label">拦截成功率</div><div class="value">100.00%</div><div class="note">贪心策略 ε=0，500 回合，失败 0 次</div></div><div class="card"><div class="label">最终探索率</div><div class="value">0.020</div><div class="note">要求 < 0.03；由 1.0 线性衰减</div></div><div class="card"><div class="label">含探索成功率</div><div class="value">100.00%</div><div class="note">ε=0.020，500 回合</div></div><div class="card"><div class="label">动画拦截次数</div><div class="value">20 次</div><div class="note">445 帧 / 22.2s，全部成功=True</div></div><div class="card"><div class="label">平均耗弹</div><div class="value">3.5 发</div><div class="note">平均 16.8 步完成拦截</div></div><div class="card"><div class="label">弹速 / 机速</div><div class="value">16 ×</div><div class="note">v_bullet=3.52, v_drone=0.22</div></div></div>
+
+<h2>收敛过程曲线</h2>
+<div class="box"><img src="convergence_curves.png" alt="收敛过程曲线"></div>
+
+<h2>训练完成后的拦截动画（20 次成功拦截）</h2>
+<div class="grid">
+  <div class="box"><img src="interception_20.gif" alt="20 次拦截动画"></div>
+  <div class="box">
+    <table><tr><td>状态维度 / 动作数</td><td>13 / 10（5 档角速度 × 开火/不开火）</td></tr><tr><td>网络</td><td>13-64-64-10 MLP（纯 NumPy）</td></tr><tr><td>算法</td><td>Double DQN + 经验回放 + 目标网络软更新 + 演示回放池 + 课程学习</td></tr><tr><td>折扣 γ / 学习率</td><td>0.99 / 0.00025</td></tr><tr><td>训练回合 / 全局步数</td><td>3000 / 91340</td></tr><tr><td>最终采用检查点</td><td>第 100 回合（Top-K 检查点 + 500 回合锦标赛复选）</td></tr><tr><td>① 漏防惩罚</td><td>200.0（一次性，最严重）</td></tr><tr><td>② 危险度惩罚</td><td>-0.3×(1-y/H)² 每步，累计最坏 ≈ 11.36</td></tr><tr><td>③ 弹药惩罚</td><td>-0.05/发，典型 ≈ 0.5，极限 ≈ 4.0</td></tr><tr><td>层级校验</td><td>通过 ✔ 漏防 > 危险 > 弹药</td></tr><tr><td>物理积分</td><td>DT=0.04s，每步 6 次子步碰撞检测，命中半径 0.065</td></tr></table>
+    <p class="sub" style="margin-top:14px">
+      动画只展示训练完成后的贪心策略，不含训练过程可视化；
+      每次拦截均从无人机在顶部随机出现开始，到子弹命中结束。
+    </p>
+  </div>
+</div>
+</body></html>

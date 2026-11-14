@@ -1,0 +1,5 @@
+# 仅需三个轻量包，PyCharm 里 pip install -r requirements.txt 即可
+# 不需要 PyTorch / TensorFlow / pygame / OpenAI Gym / ffmpeg
+numpy>=1.24
+matplotlib>=3.7
+pillow>=9.0

@@ -1,0 +1,23 @@
+{
+  "episodes": 3000,
+  "global_steps": 91340,
+  "selected_checkpoint_ep": 100,
+  "final_epsilon": 0.02,
+  "demo_success": 1.0,
+  "checkpoint_tournament": {
+    "success": 1.0,
+    "bullets": 3.486,
+    "steps": 16.45
+  },
+  "final_greedy_eval_200": {
+    "success": 1.0,
+    "bullets": 3.455,
+    "steps": 17.215
+  },
+  "elapsed_sec": 110.3,
+  "reward_hierarchy": {
+    "level1_miss": 200.0,
+    "level2_danger_worst": 11.36,
+    "level3_bullets_typical": 0.5
+  }
+}
